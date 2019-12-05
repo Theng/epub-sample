@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>ePub</title>
+        <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+        <style type="text/css">
+            body {
+                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .page_container {
+                width: 100%;
+                height: 100%;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="container">
+            
+        </div>
+        <script>
+            var book = ePub("http://192.168.10.118:1337/a1.epub");
+            book.loaded.navigation.then(function(toc) {
+                var pages = toc.toc;
+                var rendition = [];
+                pages.map((item, index) => {
+                    let container = document.getElementById("container")
+                    container.innerHTML+=`<div class="page_container" id="viewer${index}"></div>`
+                    rendition[index] = book.renderTo("viewer" + (index));
+                    rendition[index].display(index+1);
+                });
+            });
+            book.loaded.pageList.then(function(res) {
+                console.log("res: ", res);
+            });
+        </script>
+    </body>
+</html>

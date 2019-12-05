@@ -6,6 +6,10 @@
         <title>ePub</title>
         <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+   
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flickity/1.0.0/flickity.css" media="screen">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/flickity/1.0.0/flickity.pkgd.js"></script>
+
         <style type="text/css">
             body {
                 font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -17,28 +21,38 @@
                 height: 100%;
                 padding: 0 !important;
                 margin: 0 !important;
+                pointer-events: fill;
             }
         </style>
     </head>
     <body>
-        <div id="container">
+        <div id="container" class="gallery">
             
         </div>
         <script>
-            var book = ePub("https://theng.github.io/epub-sample/a1.epub");
+            var book = ePub("http://192.168.10.118:1337/a1.epub");
             book.loaded.navigation.then(function(toc) {
                 var pages = toc.toc;
                 var rendition = [];
                 pages.map((item, index) => {
                     let container = document.getElementById("container")
-                    container.innerHTML+=`<div class="page_container" id="viewer${index}"></div>`
+                    container.innerHTML+=`<div class="page_container gallery-cell" id="viewer${index}"></div>`
                     rendition[index] = book.renderTo("viewer" + (index));
                     rendition[index].display(index+1);
                 });
+
+                var flkty = new Flickity( '#container', {
+                    // options
+                    contain: true,
+                    // prevNextButtons: false,
+                    pageDots: false,
+                    // autoPlay:true
+                    });
             });
             book.loaded.pageList.then(function(res) {
                 console.log("res: ", res);
             });
+            
         </script>
     </body>
 </html>
